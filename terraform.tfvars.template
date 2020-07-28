@@ -1,0 +1,6 @@
+ADDON="<Name of GCP Splunk Add on package in tgz format ie splunk-add-on-for-google-cloud-platform_130.tgz>"
+ARCHIVE="<Name of Splunk trial Installation package in tgz format ie splunk-7.1.2-a0c72a66db66-Linux-x86_64.tgz>"
+BUCKET="<Name of storage bucket with Splunk tgz files>"
+dnszone="<GCP DNS Zone to set DNS record>"
+domain="<DNS Domain for deployment>"
+environment="<unique environment flag ie donkey, splunk, sprinkles>"
