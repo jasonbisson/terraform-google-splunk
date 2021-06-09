@@ -11,7 +11,7 @@
 # limitations under the License.
 
 data "google_organization" "org" {
-  domain = "${var.domain}"
+  domain = var.domain
 }
 
 resource "random_id" "default" {
@@ -24,38 +24,38 @@ resource "google_service_account" "default" {
 }
 
 resource "google_pubsub_topic" "default" {
-  name  = "${var.environment}${random_id.default.hex}"
+  name = "${var.environment}${random_id.default.hex}"
 }
 
 resource "google_pubsub_subscription" "default" {
   name  = "${var.environment}${random_id.default.hex}"
-  topic = "${google_pubsub_topic.default.name}"
+  topic = google_pubsub_topic.default.name
 }
 
 resource "google_pubsub_subscription_iam_member" "subscriber" {
-  count        = var.pubsub ? 1 : 0
-  project      = "${var.project}"
-  subscription = "${google_pubsub_subscription.default.name}"
+  project      = var.project
+  subscription = google_pubsub_subscription.default.name
   role         = "roles/pubsub.subscriber"
   member       = "serviceAccount:${google_service_account.default.email}"
 }
 
 resource "google_project_iam_member" "subscriber" {
-  project = "${var.project}"
+  project = var.project
   role    = "roles/viewer"
   member  = "serviceAccount:${google_service_account.default.email}"
 }
 
 resource "google_pubsub_topic_iam_member" "publisher" {
-  topic  = "${google_pubsub_topic.default.name}"
-  role   = "roles/pubsub.publisher"
-  member = "${google_logging_organization_sink.default.writer_identity}"
+  topic      = google_pubsub_topic.default.name
+  role       = "roles/pubsub.publisher"
+  member     = google_logging_organization_sink.default.writer_identity
+  depends_on = [google_logging_organization_sink.default]
 }
 
 resource "google_logging_organization_sink" "default" {
   name             = "${var.environment}${random_id.default.hex}"
-  org_id           = "${data.google_organization.org.id}"
-  filter           = "severity>=NOTICE"
+  org_id           = tonumber(replace(tostring(data.google_organization.org.id), "organizations/", ""))
+  filter           = "severity >= NOTICE"
   include_children = "true"
   destination      = "pubsub.googleapis.com/projects/${var.project}/topics/${google_pubsub_topic.default.name}"
 }

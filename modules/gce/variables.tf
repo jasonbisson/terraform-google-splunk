@@ -33,7 +33,7 @@ variable "can_ip_forward" {
 }
 
 variable "labels" {
-  type        = "map"
+  type        = map
   description = "Labels, provided as a map"
   default     = {}
 }
@@ -73,7 +73,7 @@ variable "auto_delete" {
 
 variable "additional_disks" {
   description = "List of maps of additional disks. See https://www.terraform.io/docs/providers/google/r/compute_instance_template.html#disk_name"
-  type        = "list"
+  type        = list
   default     = []
 }
 
@@ -105,13 +105,13 @@ variable "startup_script" {
 }
 
 variable "metadata" {
-  type        = "map"
+  type        = map
   description = "Metadata, provided as a map"
   default     = {}
 }
 
 variable "service_account" {
-  type        = "map"
+  type        = map
   description = "Service account to attach to the instance. See https://www.terraform.io/docs/providers/google/r/compute_instance_template.html#service_account."
   default     = {}
 }
