@@ -53,8 +53,9 @@ resource "google_pubsub_topic_iam_member" "publisher" {
 }
 
 resource "google_logging_organization_sink" "default" {
-  name             = "${var.environment}${random_id.default.hex}"
-  org_id           = tonumber(replace(tostring(data.google_organization.org.id), "organizations/", ""))
+  name = "${var.environment}${random_id.default.hex}"
+  #org_id           = tonumber(replace(tostring(data.google_organization.org.id), "organizations/", ""))
+  org_id           = data.google_organization.org.org_id
   filter           = "severity >= NOTICE"
   include_children = "true"
   destination      = "pubsub.googleapis.com/projects/${var.project}/topics/${google_pubsub_topic.default.name}"
